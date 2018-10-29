@@ -41,28 +41,39 @@ def test_string_to_location():
     #test with correct inputs
 
 def test_location_to_string():
-    # Replace with tests
+    with pytest.raises(ValueError):
+        location_to_string((10,0))
+    assert location_to_string((0,0)) == ('A0')
 
 def test_at():
-    # Replace with tests
+    assert type(at(board[location[0]][location[1]]) is str
+    
 
 def test_all_locations():
-    # Replace with tests
+    assert len(all_locations()) == 25
+    
 
 def test_adjacent_location():
-    # Replace with tests
+    assert adjacent_location((0,0), 'right') == (0,1)
+    
     
 def test_is_legal_move_by_musketeer():
-    # Replace with tests
+    with pytest.raises(ValueError):
+        is_legal_move_by_musketeer((0,0)) == 'M'
+    
     
 def test_is_legal_move_by_enemy():
-    # Replace with tests
+    with pytest.raises(ValueError):
+        is_legal_move_by_enemy((0,0)) == 'R'
+    
 
 def test_is_legal_move():
-    # Replace with tests
+        assert is_legal_move((0,0), 'right') == bool
+    
 
 def test_can_move_piece_at():
-    # Replace with tests
+        assert can_move_piece_at((0,1)) == bool
+    
 
 def test_has_some_legal_move_somewhere():
     set_board(board1)
@@ -72,24 +83,32 @@ def test_has_some_legal_move_somewhere():
     # with at least one additional board
 
 def test_possible_moves_from():
-    # Replace with tests
+    assert type(possible_moves_from((0,0))) is list
+    
 
 def test_is_legal_location():
-    # Replace with tests
+    assert (is_legal_location > (4,4)) is False
+    
 
 def test_is_within_board():
-    # Replace with tests
+    assert is_within_board((0,0), 'left') is False
+    
 
 def test_all_possible_moves_for():
-    # Replace with tests
+    assert type(all_possible_moves_for('M')) is list
+    
     
 def test_make_move():
-    # Replace with tests
+    assert make_move((0,0), 'right') == (0, 1)
+    
     
 def test_choose_computer_move():
-    # Replace with tests; should work for both 'M' and 'R'
+    assert type(choose_computer_move('M')) is tuple
+    assert type(choose_computer_move('R')) is tuple
+    ; should work for both 'M' and 'R'
 
 def test_is_enemy_win():
-    # Replace with tests
+    assert type(is_enemy_win()) is tuple
+    
 
 
