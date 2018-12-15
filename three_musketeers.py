@@ -42,7 +42,13 @@ def string_to_location(s):
        is outside of the correct range (between 'A' and 'E' for s[0] and
        between '1' and '5' for s[1]
        """
-    pass # Replace with code
+    row = s[0].upper()
+    col = int(s[1])
+    valid_row = ["A","B","C","D","E"]
+    valid_col = range(1,6)
+    if row not in valid_row or col not in valid_col:
+        raise ValueError("Input out of the correct range")
+    return [(a,b) for a = valid_row.index(s[0]) and b = valid_col.index(s[1])]
 
 def location_to_string(location):
     """Returns the string representation of a location.
@@ -108,7 +114,7 @@ def possible_moves_from(location):
 
 def is_legal_location(location):
     """Tests if the location is legal on a 5x5 board.
-    You can assume that input will always be in correct range."""
+    You can assume that input will be a pair of integer numbers."""
     pass # Replace with code
     
 def is_within_board(location, direction):
