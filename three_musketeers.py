@@ -25,7 +25,7 @@ def create_board():
     r = 'R'
     valid_row = ["A", "B", "C", "D", "E"]
     valid_col = range(1,6)
-    directions = ["right", "down", "left", "up"] 
+    directions = ["down", "left", "up", "right"] 
     board = [ [r, r, r, r, m],
               [r, r, r, r, r],
               [r, r, m, r, r],
@@ -111,7 +111,8 @@ def is_legal_move_by_musketeer(location, direction):
     """
     if at(location) != "M":
         raise ValueError("Not 'M' at location")
-
+    if is_within_board(location, direction) is not True:
+        raise ValueError("Move is outside board")    
     move_location = adjacent_location(location, direction)
     if at(move_location) == "R":
         return True
@@ -128,7 +129,8 @@ def is_legal_move_by_enemy(location, direction):
     """
     if at(location) != "R":
         raise ValueError("Not 'R' at location")
-
+    if is_within_board(location, direction) is not True:
+        raise ValueError("Move is outside board")
     move_location = adjacent_location(location, direction)
     if at(move_location) is "-":
         return True
@@ -142,8 +144,8 @@ def is_legal_move(location, direction):
     @param direction: string
     @return boolean
     """
-    move_location = adjacent_location(location, direction)
-    (row,column) = move_location
+    if is_within_board(location, direction) is not True:
+        raise ValueError("Move is outside board")
     player = at(location)
     if player == "M":
         return is_legal_move_by_musketeer(location, direction)
@@ -205,11 +207,10 @@ def possible_moves_from(location):
     result = []
     for _ in directions:
         try:
-            at(adjacent_location(location, _))
+            if is_legal_move(location, _) is True:
+                result.append(_)
         except:
             continue
-        if is_legal_move(location, _) is True :
-                result.append(_)
     return result
 
 def is_legal_location(location):
@@ -244,8 +245,11 @@ def all_possible_moves_for(player):
     result = []
     for loc in all_locations():
         for dir in directions:
-            if at(loc) is player and is_legal_move(loc, dir) is True:
-                result.append((loc, dir))
+            try:
+                if at(loc) is player and is_legal_move(loc, dir) is True:
+                    result.append((loc, dir))
+            except:
+                continue
     return result
 
 def make_move(location, direction):
@@ -270,7 +274,7 @@ def choose_computer_move(who):
     import random
     all_moves = all_possible_moves_for(who)
     choice = random.randint(0, len(all_moves))
-    return all_moves[choice]
+    return all_moves[random.choice(range(0,len(all_moves)))]
 
 def is_enemy_win():
     """Returns True if all 3 Musketeers are in the same row or column.
@@ -278,11 +282,11 @@ def is_enemy_win():
     """
     result = False
     location_M = []
-    for _ in all_locations:
+    for _ in all_locations():
         if at(_) is "M":
             location_M.append(_)
-    if (location_M[0][0] == location[1][0] == location[2][0] or
-        location_M[0][1] == location[1][1] == location[2][1]):
+    if (location_M[0][0] == location_M[1][0] == location_M[2][0] or
+        location_M[0][1] == location_M[1][1] == location_M[2][1]):
 	    result = True
     return result
     	

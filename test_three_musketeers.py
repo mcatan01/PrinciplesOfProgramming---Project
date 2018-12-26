@@ -131,7 +131,7 @@ def test_has_some_legal_move_somewhere():
 def test_possible_moves_from():
     set_board(board1)
     assert possible_moves_from((0,3)) == []
-    assert possible_moves_from((2,2)) == ['up', 'right', 'left']
+    assert possible_moves_from((2,2)) == ['left', 'up', 'right']
     assert possible_moves_from((4,1)) == []
     
 
@@ -147,17 +147,17 @@ def test_is_within_board():
 
 def test_all_possible_moves_for():
     set_board(board2)
-    assert all_possible_moves_for('M') == [((0, 1), 'right'), ((0, 1), 'left'), ((4, 4), 'left')]
+    assert sorted(all_possible_moves_for('M')) == sorted([((0, 2), 'right'), ((0, 2), 'left'), ((4, 4), 'left')])
     set_board(board1)
-    assert all_possible_moves_for('R') == [((1, 2), 'up'), ((1, 2), 'left'), ((2, 1), 'up'),((2, 1), 'left'), ((2, 3), 'right'), ((2,3), 'down'),((3, 1), 'right'), ((3, 1), 'down'), ((3, 1), 'left'),((4, 3), 'up'), ((4, 3), 'right'), ((4, 3), 'left')]
+    assert sorted(all_possible_moves_for('R')) == sorted([((1, 2), 'up'), ((1, 2), 'left'), ((2, 1), 'up'),((2, 1), 'left'), ((2, 3), 'right'), ((2,3), 'down'),((3, 1), 'right'), ((3, 1), 'down'), ((3, 1), 'left'),((4, 3), 'up'), ((4, 3), 'right'), ((4, 3), 'left')])
     
     
 def test_make_move():
     set_board(board1)
     make_move((1, 2), 'up')
-    assert board[0][2] == 'R'
+    assert board1[0][2] == 'R'
     make_move((2, 2),'right')
-    assert board[2][3] == 'M'
+    assert board1[2][3] == 'M'
     
     
 def test_choose_computer_move():
