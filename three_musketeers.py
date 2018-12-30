@@ -44,9 +44,11 @@ def get_board():
 def string_to_location(s):
     """Given a two-character string (such as 'A5'), returns the designated
        location as a 2-tuple (such as (0, 4)).
-       The function should raise ValueError exception if the input
+       The function raise ValueError exception if the input
        is outside of the correct range (between 'A' and 'E' for s[0] and
        between '1' and '5' for s[1]
+       @param s: string
+       @return 2-tuple integer
        """
     row = s[0].upper()
     col = int(s[1])
@@ -59,8 +61,8 @@ def location_to_string(location):
     """Returns the string representation of a location.
     Similarly to the previous function, this function should raise
     ValueError exception if the input is outside of the correct range.
-    @param location: 2-tuple location
-    @return: string location
+    @param location: 2-tuple integer
+    @return: string
     """
     
     if location[0] not in range(0,5) or location[1] not in range(0,5):
@@ -70,12 +72,14 @@ def location_to_string(location):
 
 def at(location):
     """Returns the contents of the board at the given location.
-    You can assume that input will always be in correct range."""
+    @param location: 2-tuple integer
+    @return: string
+    """
     return board[location[0]][location[1]]
 
 def all_locations():
     """Returns a list of all 25 locations on the board.
-    @return list
+    @return: list
     """
     result = []
     for x in range(0,5):
@@ -86,9 +90,9 @@ def all_locations():
 def adjacent_location(location, direction):
     """Return the location next to the given one, in the given direction.
        Does not check if the location returned is legal on a 5x5 board.
-    @param location: 2-tuple of integers
+    @param location: 2-tuple integer
     @param direction: string
-    @return: 2-tuple of integers
+    @return: 2-tuple integer
     """
     (row, column) = location
     direction = direction.lower()
@@ -103,36 +107,28 @@ def adjacent_location(location, direction):
 
 def is_legal_move_by_musketeer(location, direction):
     """Tests if the Musketeer at the location can move in the direction.
-    You can assume that input will always be in correct range. Raises
-    ValueError exception if at(location) is not 'M'
-    @param location: 2-tuple of integers
+    Raises ValueError exception if at(location) is not 'M'
+    @param location: 2-tuple integers
     @param direction: string
-    @return boolean
+    @return: boolean
     """
     if at(location) != "M":
         raise ValueError("Not 'M' at location")
-    if is_within_board(location, direction) is not True:
-        raise ValueError("Move is outside board")    
-    move_location = adjacent_location(location, direction)
-    if at(move_location) == "R":
+    if (is_within_board(location, direction) is True) and (at(adjacent_location(location, direction)) == "R"):
         return True
     else:
         return False
 
 def is_legal_move_by_enemy(location, direction):
     """Tests if the enemy at the location can move in the direction.
-    You can assume that input will always be in correct range. Raises
-    ValueError exception if at(location) is not 'R'.
-    @param location: 2-tuple integers
+    Raises ValueError exception if at(location) is not 'R'.
+    @param location: 2-tuple integer
     @param direction: string
-    @return boolean
+    @return: boolean
     """
     if at(location) != "R":
         raise ValueError("Not 'R' at location")
-    if is_within_board(location, direction) is not True:
-        raise ValueError("Move is outside board")
-    move_location = adjacent_location(location, direction)
-    if at(move_location) is "-":
+    if (is_within_board(location, direction) is True) and (at(adjacent_location(location, direction)) == "-"):
         return True
     else:
         return False
@@ -140,23 +136,18 @@ def is_legal_move_by_enemy(location, direction):
 def is_legal_move(location, direction):
     """Tests whether it is legal to move the piece at the location
     in the given direction.
-    @param location: 2-tuple integers
+    @param location: 2-tuple integer
     @param direction: string
     @return boolean
     """
-    if is_within_board(location, direction) is not True:
-        raise ValueError("Move is outside board")
     player = at(location)
     if player == "M":
         return is_legal_move_by_musketeer(location, direction)
     elif player == "R":
-        return is_legal_move_by_enemy(location, direction)
-    else:
-        raise ValueError('No player at location') 
+        return is_legal_move_by_enemy(location, direction) 
 
 def can_move_piece_at(location):
-    """Tests whether the player at the location has at least one move available.
-    ValueError raised if no player at location
+    """Tests whether the player at the location has at least one move available
     @param location: 2-tuple integers
     @return boolean
     """
@@ -175,8 +166,6 @@ def can_move_piece_at(location):
                     result = True
             except:
                 continue
-    else:
-        raise ValueError("No player at location")
     return result
 
 
@@ -211,26 +200,24 @@ def possible_moves_from(location):
                 result.append(_)
         except:
             continue
-    return result
+    return sorted(result)
 
 def is_legal_location(location):
     """Tests if the location is legal on a 5x5 board.
-    You can assume that input will be a pair of integer numbers.
     @param location: 2-tuple integers
-    @return boolean
+    @return: boolean
     """
     (row, col) = location
-    result = False
     if (row >= 0 and row <= 4) and (col >= 0 and col <= 4):
-        result = True
-    return result 
+        return True
+    else: 
+        return False 
     
 def is_within_board(location, direction):
     """Tests if the move stays within the boundaries of the board.
-    You can assume that input will always be in correct range.
     @param location: 2-tuple integers
     @param direction: string
-    @return boolean
+    @return: boolean
     """
     move_location = adjacent_location(location, direction)
     return is_legal_location(move_location)
@@ -238,9 +225,8 @@ def is_within_board(location, direction):
 def all_possible_moves_for(player):
     """Returns every possible move for the player ('M' or 'R') as a list
     (location, direction) tuples.
-    You can assume that input will always be in correct range.
     @param player: string
-    @return list
+    @return: list
     """
     result = []
     for loc in all_locations():
@@ -250,45 +236,44 @@ def all_possible_moves_for(player):
                     result.append((loc, dir))
             except:
                 continue
-    return result
+    return sorted(result)
 
 def make_move(location, direction):
     """Moves the piece in location in the indicated direction.
-    Doesn't check if the move is legal. You can assume that input will always
-    be in correct range.
+    Doesn't check if the move is legal.
     @param location: 2-tuple integers
     @param direction: string
     """
     new_location = adjacent_location(location, direction)
     player = at(location)
     board[new_location[0]][new_location[1]] = player
+    board[location[0]][location[1]] = '-'
 
 def choose_computer_move(who):
-    """The computer chooses a move for a Musketeer (who = 'M') or an
+    """The computer chooses a move (using random module) for a Musketeer (who = 'M') or an
     enemy (who = 'R') and returns it as the tuple (location, direction),
     where a location is a (row, column) tuple as usual.
     You can assume that input will always be in correct range.
     @param who: string
-    @return 2-tuple integers
+    @return: 2-tuple integers
     """
     import random
     all_moves = all_possible_moves_for(who)
-    choice = random.randint(0, len(all_moves))
     return all_moves[random.choice(range(0,len(all_moves)))]
 
 def is_enemy_win():
     """Returns True if all 3 Musketeers are in the same row or column.
     @return boolean
     """
-    result = False
     location_M = []
     for _ in all_locations():
         if at(_) is "M":
             location_M.append(_)
-    if (location_M[0][0] == location_M[1][0] == location_M[2][0] or
-        location_M[0][1] == location_M[1][1] == location_M[2][1]):
-	    result = True
-    return result
+    if ((location_M[0][0] == location_M[1][0] == location_M[2][0]) or
+        (location_M[0][1] == location_M[1][1] == location_M[2][1])):
+	    return True
+    else: 
+        return False
     	
 
 #---------- Communicating with the user ----------
