@@ -1,5 +1,16 @@
 # The Three Musketeers Game
 
+
+import three_musketeers_with_files
+
+
+# !---Important---!
+# Communicating with the user's section has been slightly modified. 
+# users_side variable assignment has been moved from start() to create_board()
+# Reason: To make the variable accessible to make_move() 
+
+
+
 # In all methods,
 #   A 'location' is a two-tuple of integers, each in the range 0 to 4.
 #        The first integer is the row number, the second is the column number.
@@ -12,25 +23,26 @@
 # For brevity, Cardinal Richleau's men are referred to as "enemy".
 # 'pass' is a no-nothing Python statement. Replace it with actual code.
 
+
+
 def create_board():
+    """Creates the initial Three Musketeers board and makes it globally
+       available. Makes also users_side variable globally available
+       (which retrieve users choice of player)."""
+
     global board
+    global users_side
     global valid_row 
     global valid_col
     global directions
-    """Creates the initial Three Musketeers board and makes it globally
-       available (That is, it doesn't have to be passed around as a
-       parameter.) 'M' represents a Musketeer, 'R' represents one of
-       Cardinal Richleau's men, and '-' denotes an empty space."""
+
     m = 'M'
     r = 'R'
     valid_row = ["A", "B", "C", "D", "E"]
     valid_col = range(1,6)
-    directions = ["down", "left", "up", "right"] 
-    board = [ [r, r, r, r, m],
-              [r, r, r, r, r],
-              [r, r, m, r, r],
-              [r, r, r, r, r],
-              [m, r, r, r, r] ]
+    directions = ["down", "left", "up", "right"]
+    users_side = choose_users_side() 
+    board = three_musketeers_with_files.create_retrieve_board()
 
 def set_board(new_board):
     """Replaces the global board with new_board."""
@@ -248,6 +260,8 @@ def make_move(location, direction):
     player = at(location)
     board[new_location[0]][new_location[1]] = player
     board[location[0]][location[1]] = '-'
+    if player == users_side:
+        three_musketeers_with_files.save_board()
 
 def choose_computer_move(who):
     """The computer chooses a move (using random module) for a Musketeer (who = 'M') or an
@@ -373,7 +387,6 @@ def describe_move(who, location, direction):
 
 def start():
     """Plays the Three Musketeers Game."""
-    users_side = choose_users_side()
     board = create_board()
     print_instructions()
     print_board()
