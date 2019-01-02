@@ -6,8 +6,10 @@ import three_musketeers_with_files
 
 # !---Important---!
 # Communicating with the user's section has been slightly modified. 
-# users_side variable assignment has been moved from start() to create_board()
-# Reason: To make the variable accessible to make_move() 
+# move_musketeer() and move_enemy() have been modified to work with file system:
+# the functions now call three_musketeers_with_files.save_board() after each user's turn.
+#
+# start() now assign create_board_modified() to board variable, instead of create_board().
 
 
 
@@ -24,14 +26,33 @@ import three_musketeers_with_files
 # 'pass' is a no-nothing Python statement. Replace it with actual code.
 
 
-
 def create_board():
+    global board
+    global valid_row 
+    global valid_col
+    global directions
+    """Creates the initial Three Musketeers board and makes it globally
+    available (That is, it doesn't have to be passed around as a
+    parameter.) 'M' represents a Musketeer, 'R' represents one of
+    Cardinal Richleau's men, and '-' denotes an empty space."""
+    
+    m = 'M'
+    r = 'R'
+    valid_row = ["A", "B", "C", "D", "E"]
+    valid_col = range(1,6)
+    directions = ["down", "left", "up", "right"] 
+    board = [ [r, r, r, r, m],
+	      [r, r, r, r, r],
+	      [r, r, m, r, r],
+	      [r, r, r, r, r],
+	      [m, r, r, r, r] ]
+
+def create_board_modified():
     """Creates the initial Three Musketeers board and makes it globally
        available. Makes also users_side variable globally available
        (which retrieve users choice of player)."""
 
     global board
-    global users_side
     global valid_row 
     global valid_col
     global directions
@@ -41,7 +62,6 @@ def create_board():
     valid_row = ["A", "B", "C", "D", "E"]
     valid_col = range(1,6)
     directions = ["down", "left", "up", "right"]
-    users_side = choose_users_side() 
     board = three_musketeers_with_files.create_retrieve_board()
 
 def set_board(new_board):
@@ -252,7 +272,7 @@ def all_possible_moves_for(player):
 
 def make_move(location, direction):
     """Moves the piece in location in the indicated direction.
-    Doesn't check if the move is legal.
+    Doesn't check if the move is legal. Propose to user to save current board after making move.
     @param location: 2-tuple integers
     @param direction: string
     """
@@ -260,8 +280,6 @@ def make_move(location, direction):
     player = at(location)
     board[new_location[0]][new_location[1]] = player
     board[location[0]][location[1]] = '-'
-    if player == users_side:
-        three_musketeers_with_files.save_board()
 
 def choose_computer_move(who):
     """The computer chooses a move (using random module) for a Musketeer (who = 'M') or an
@@ -319,6 +337,7 @@ For convenience in typing, you may use lowercase letters.""")
 
 def choose_users_side():
     """Returns 'M' if user is playing Musketeers, 'R' otherwise."""
+    global user
     user = ""
     while user != 'M' and user != 'R':
         answer = input("Would you like to play Musketeer (M) or enemy (R)? ")
@@ -352,6 +371,7 @@ def move_musketeer(users_side):
             if is_legal_move(location, direction):
                 make_move(location, direction)
                 describe_move("Musketeer", location, direction)
+                three_musketeers_with_files.save_board()
         else:
             print("You can't move there!")
             return move_musketeer(users_side)
@@ -369,6 +389,7 @@ def move_enemy(users_side):
             if is_legal_move(location, direction):
                 make_move(location, direction)
                 describe_move("Enemy", location, direction)
+                three_musketeers_with_files.save_board()
         else:
             print("You can't move there!")
             return move_enemy(users_side)
@@ -387,7 +408,8 @@ def describe_move(who, location, direction):
 
 def start():
     """Plays the Three Musketeers Game."""
-    board = create_board()
+    users_side = choose_users_side()
+    board = create_board_modified()
     print_instructions()
     print_board()
     while True:
