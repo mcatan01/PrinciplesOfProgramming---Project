@@ -1,0 +1,68 @@
+Total coursework mark: 17.7 (out of 20)
+
+Exercise sheets mark: 10  (out of 10)
+
+Project mark:  7.7  (out of 10)
+
+Project feedback and mark details
+
+Correctness and adherence to specification:  30  (out of 30%)
+
+- At the very last line of three_musketeers.py, consider modifying your code as follows to ensure your code runs as submitted (whilst also running without modification in pytest). 
+
+    if __name__ == "__main__":
+        start()
+
+- Your functionality works as specified. Well Done!
+
+
+Completeness of code, tests, and commit history:  30    (out of 30%)   
+
+- Your implementation is complete.
+- Your 20 tests all pass. Your number of tests is appropriate for the project.
+- GitHub session 7 initial commit is present.
+- Your GitHub commit history is good.
+
+
+Coding style: 9   (out of 10%) 
+
+- Your coding style is overall good. 
+- Consider writing more succinct code where possible. e.g. in three_musketeers.py (line 243) change:
+
+    if (row >= 0 and row <= 4) and (col >= 0 and col <= 4):
+        return True
+    else: 
+        return False 
+
+to:
+
+    return (row >= 0 and row <= 4) and (col >= 0 and col <= 4)
+
+
+
+Extension:  8     (out of 30%) 
+
+-
+- You have implemented the file saving extension which attempts to save the state of the board.
+- Your code does not run as submitted, giving exceptions as follows:
+
+Do you want to save the current board (Y) or not (N) ?Y
+Traceback (most recent call last):
+  File "/home/richard/PycharmProjects/POP1marking/venv/three_musketeers.py", line 433, in <module>
+    start()
+  File "/home/richard/PycharmProjects/POP1marking/venv/three_musketeers.py", line 417, in start
+    board = move_musketeer(users_side)
+  File "/home/richard/PycharmProjects/POP1marking/venv/three_musketeers.py", line 374, in move_musketeer
+    three_musketeers_with_files.save_board()
+  File "/home/richard/PycharmProjects/POP1marking/venv/three_musketeers_with_files.py", line 14, in save_board
+    pickle.dump(three_musketeers.get_board(), outfile)
+  File "/home/richard/PycharmProjects/POP1marking/venv/three_musketeers.py", line 74, in get_board
+    return board
+NameError: name 'board' is not defined
+
+
+- Consider if your code should save whether you are the musketeer or the enemy.
+- Consider adding functionality to allow multiple games to be saved (perhaps by specifying the filename).
+- Your code asks the user if they want to save the game after every move - consider making this more user friendly (e.g. giving the user the option of entering 'S' to save a game instead of entering a move).
+
+
